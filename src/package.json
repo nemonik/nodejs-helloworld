@@ -1,0 +1,10 @@
+{
+  "name": "helloworld",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Node.js Helloworld app",
+  "author": "Michael J. Walsh <walsh@nemonik.com>",
+  "dependencies": {
+    "express": "4.13.3"
+  }
+}
