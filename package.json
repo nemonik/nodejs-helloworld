@@ -10,6 +10,6 @@
     "test": "make test"
   }, 
   "devDependencies": {
-    "mocha": "latest",
+    "mocha": "latest"
   }
 }
