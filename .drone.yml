@@ -1,0 +1,8 @@
+build:
+  image: centos:7
+  commands:
+    - npm -d install
+    - npm test
+    - npm install -g mocha
+    - mocha
+
