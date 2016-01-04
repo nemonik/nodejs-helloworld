@@ -11,12 +11,14 @@ RUN yum install -y epel-release
 RUN yum install -y nodejs npm
 
 # Install app dependencies
-COPY src /src
-RUN cd /src; npm install
+RUN mkdir -p /app
+COPY server.js /app
+COPY package.json /server 
+RUN cd /server; npm install
 
 # App binds to port 20080 
 EXPOSE  20080
 
 # Run the app
-CMD ["node", "/src/index.js"]
+CMD ["node", "/app/server.js"]
 

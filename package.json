@@ -5,6 +5,11 @@
   "description": "Node.js Helloworld app",
   "author": "Michael J. Walsh <walsh@nemonik.com>",
   "dependencies": {
-    "express": "4.13.3"
+  }, 
+  "scripts": {
+    "test": "make test"
+  }, 
+  "devDependencies": {
+    "mocha": "latest",
   }
 }
