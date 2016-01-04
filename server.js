@@ -1,5 +1,3 @@
-console.log("I am here");
-
 var http = require('http');
 
 const PORT = 20080; 
