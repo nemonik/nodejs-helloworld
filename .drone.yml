@@ -2,8 +2,7 @@ build:
   image: centos:7
   commands:
     - yum install -y epel-release
-    - yum install -y nodejs
-    - yum install -y npm
+    - yum install -y nodejs npm make
     - npm -d install
     - npm test
     - npm install -g mocha
