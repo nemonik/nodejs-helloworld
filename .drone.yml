@@ -4,7 +4,6 @@ build:
     - yum install -y epel-release
     - yum install -y nodejs npm make
     - npm -d install
-    - npm test
     - npm install -g mocha
     - mocha
 
