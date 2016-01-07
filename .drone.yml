@@ -10,7 +10,7 @@ build:
 deploy:
   ssh:
     host: 192.168.99.1
-    port: 2022
+    port: 22
     user: walsh
     commands:
       - echo "hello" > /tmp/hello.txt
