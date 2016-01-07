@@ -11,6 +11,5 @@ deploy:
   ssh:
     host: 192.168.99.1
     user: walsh
-    port: 22
     commands:
       - echo "hello" > /tmp/hello.txt
