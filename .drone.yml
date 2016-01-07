@@ -8,9 +8,23 @@ build:
 #    - mocha
 #
 deploy:
-  ssh:
+  rsync:
+    user: walsh
     host: 192.168.99.1
     port: 22
-    user: walsh
+    source: *
+    target: /tmp/nodejs-helloworld
+    delete: false
+    recursive: true
+    exclude:
+      - "test/*"
     commands:
-      - echo "hello" > /tmp/hello.txt
+      - cd /tmp/nodejs-helloworld
+      - node server
+#  ssh:
+#    host: 192.168.99.1
+#    port: 22
+#    user: walsh
+#    commands:
+#      - 
+
