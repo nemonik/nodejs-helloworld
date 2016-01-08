@@ -19,5 +19,5 @@ deploy:
       - "test/*"
     commands:
       - cd /tmp/nodejs-helloworld
-      - /usr/local/bin/node server
+      - /usr/local/bin/node server &
 
