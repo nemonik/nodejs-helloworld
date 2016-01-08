@@ -12,18 +12,12 @@ deploy:
     host: 192.168.99.1
     port: 22
     source: .
-    target: /tmp/nodejs-helloworld
+    target: /tmp
     delete: false
     recursive: true
     exclude:
       - "test/*"
     commands:
       - cd /tmp/nodejs-helloworld
-      - node server
-#  ssh:
-#    host: 192.168.99.1
-#    port: 22
-#    user: walsh
-#    commands:
-#      - 
+      - /usr/local/bin/node server
 
