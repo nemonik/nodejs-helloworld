@@ -21,6 +21,6 @@ deploy:
     commands:
       - cd /tmp/nodejs-helloworld
       - killall -KILL node >/dev/null 2>&1
-      - sh -c '/usr/local/bin/node server &'
+      - sh -c '/usr/local/bin/node server &' &
     when:
       branch: [master]
