@@ -26,7 +26,8 @@ deploy:
       -  echo Stopping node server w/ PID of $PID.
       -  kill -9 $PID
       - fi
-      -  /usr/local/bin/node server &
+      - /usr/local/bin/node server &
       - echo Starting node server w/ PID of $!.
+      - exit
     when:
       branch: [master]
