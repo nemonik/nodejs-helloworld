@@ -1,0 +1,7 @@
+{
+    "uid": "server",
+    "append": true,
+    "watch": true,
+    "script": "server.js",
+    "sourceDir": "/tmp/nodejs-helloworld"
+}

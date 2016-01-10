@@ -22,7 +22,9 @@ deploy:
       - source ~/.zshrc
       - cp -Rf /tmp/rsync/nodejs-helloworld /tmp/nodejs-helloworld
       - cd /tmp/nodejs-helloworld
-      - echo $PATH
-      - forever restart ./server.js
+      - PID="$(ps aux | grep "usr/local/Cellar/node/5.3.0/bin/node /usr/local/lib/node_modules/forever/bin/monitor server.js" | grep -v "grep" | awk "{ print \$2 }")"
+      -   if [ -z "$PID" ]; then
+      -     forever start ./forever.json
+      - fi
     when:
       branch: [master]
