@@ -20,6 +20,6 @@ deploy:
       - "test/*"
     commands:
       - cd /tmp/nodejs-helloworld
-      - ./run restart
+      - ./run restart &
     when:
       branch: [master]
