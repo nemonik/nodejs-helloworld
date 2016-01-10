@@ -2,19 +2,26 @@
 
 function start() {
   if [ -f ./server.pid ]; then
-    echo "server.pid already exists."
-    exit -1
+    if ! kill -0 `cat server.pid` > /dev/null 2>&1; then
+      rm -f ./server.pid
+    else
+      echo "node server already running."
+      exit -1
+    fi
   fi
 
   echo "Starting node server."
   /usr/local/bin/node server &
   echo $! > ./server.pid
+  echo -n "PID is "
+  echo -n `cat server.pid`
   echo
 }
 
 function stop() {
   if [ -f ./server.pid ]; then
-    echo "Stopping node server."
+    echo -n "Stopping node server for PID of "
+    echo `cat server.pid`
     kill -9 `cat server.pid`
     rm -f ./server.pid
     echo
