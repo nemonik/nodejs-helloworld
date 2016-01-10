@@ -5,6 +5,7 @@
   "description": "Node.js Helloworld app",
   "author": "Michael J. Walsh <walsh@nemonik.com>",
   "dependencies": {
+    "forever": "latest"
   }, 
   "scripts": {
     "test": "make test"

@@ -21,13 +21,6 @@ deploy:
     commands:
       - cp -Rf /tmp/rsync/nodejs-helloworld /tmp/nodejs-helloworld
       - cd /tmp/nodejs-helloworld
-      - PID="$(ps aux | grep "/usr/local/bin/node server" | grep -v "grep" | awk "{ print \$2 }")"
-      - if [ "$PID" ]; then
-      -  echo Stopping node server w/ PID of $PID.
-      -  kill -9 $PID
-      - fi
-      - /usr/local/bin/node server &
-      - echo Starting node server w/ PID of $!.
-      - exit
+      - forever restart server.js
     when:
       branch: [master]
