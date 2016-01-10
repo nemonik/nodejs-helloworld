@@ -20,7 +20,6 @@ deploy:
       - "test/*"
     commands:
       - cd /tmp/nodejs-helloworld
-      - killall -KILL node >/dev/null 2>&1
-      - sh -c '/usr/local/bin/node server &' &
+      - ./run restart
     when:
       branch: [master]

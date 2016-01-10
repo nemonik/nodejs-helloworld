@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function start() {
+  if [ -f ./server.pid ]; then
+    echo "server.pid already exists."
+    exit -1
+  fi
+
+  echo "Starting node server."
+  /usr/local/bin/node server &
+  echo $! > ./server.pid
+  echo
+}
+
+function stop() {
+  if [ -f ./server.pid ]; then
+    echo "Stopping node server."
+    kill -9 `cat server.pid`
+    rm -f ./server.pid
+    echo
+  fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0
