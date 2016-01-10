@@ -1,31 +1,49 @@
 #!/bin/bash
 
 function start() {
-  if [ -f ./server.pid ]; then
-    if ! kill -0 `cat server.pid` > /dev/null 2>&1; then
-      rm -f ./server.pid
-    else
-      echo "node server already running."
-      exit -1
-    fi
-  fi
+#  if [ -f ./server.pid ]; then
+#    if ! kill -0 `cat server.pid` > /dev/null 2>&1; then
+#      rm -f ./server.pid
+#    else
+#      echo "node server already running."
+#      exit -1
+#    fi
+#  fi
+#
+#  echo "Starting node server."
+#  /usr/local/bin/node server &
+#  echo $! > ./server.pid
+#  echo -n "PID is "
+#  echo -n `cat server.pid`
+#  echo
 
-  echo "Starting node server."
-  /usr/local/bin/node server &
-  echo $! > ./server.pid
-  echo -n "PID is "
-  echo -n `cat server.pid`
-  echo
+   PID="$(ps aux | grep "/usr/local/bin/node server" | grep -v "grep" | awk "{ print \$2 }")"
+
+   if [ -z "$PID" ]; then
+     echo -n "Starting node server w/ PID of "
+     /usr/local/bin/node server &
+     echo $!
+   else
+     echo node server already running w/ PID of $PID.
+     exit -1
+   fi
 }
 
 function stop() {
-  if [ -f ./server.pid ]; then
-    echo -n "Stopping node server for PID of "
-    echo `cat server.pid`
-    kill -9 `cat server.pid`
-    rm -f ./server.pid
-    echo
-  fi
+#  if [ -f ./server.pid ]; then
+#    echo -n "Stopping node server for PID of "
+#    echo `cat server.pid`
+#    kill -9 `cat server.pid`
+#    rm -f ./server.pid
+#    echo
+#  fi
+
+   PID="$(ps aux | grep "/usr/local/bin/node server" | grep -v "grep" | awk "{ print \$2 }")"
+
+   if [ "$PID" ]; then
+     echo Stopping node server w/ PID of $PID.
+     kill -9 $PID
+   fi
 }
 
 case "$1" in

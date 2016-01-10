@@ -21,6 +21,6 @@ deploy:
     commands:
       - cp -Rf /tmp/rsync/nodejs-helloworld /tmp/nodejs-helloworld
       - cd /tmp/nodejs-helloworld
-      - ./run restart &
+      - ./run restart
     when:
       branch: [master]
