@@ -19,8 +19,10 @@ deploy:
     exclude:
       - "test/*"
     commands:
+      - source ~/.zshrc
       - cp -Rf /tmp/rsync/nodejs-helloworld /tmp/nodejs-helloworld
       - cd /tmp/nodejs-helloworld
-      - /usr/local/bin/forever restart server.js
+      - echo $PATH
+      - forever restart server.js
     when:
       branch: [master]
