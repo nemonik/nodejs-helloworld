@@ -23,6 +23,6 @@ deploy:
       - cp -Rf /tmp/rsync/nodejs-helloworld /tmp/nodejs-helloworld
       - cd /tmp/nodejs-helloworld
       - echo $PATH
-      - forever restart server.js
+      - forever restart ./server.js
     when:
       branch: [master]
