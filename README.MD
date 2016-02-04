@@ -139,7 +139,7 @@ Then point your browser to:
     To query details for the known **mysql** services, hit <http://consul.service.consul:8500/v1/catalog/service/mysql> and it will return:
      
         [{"Node":"e9cba74266b5","Address":"172.17.0.2","ServiceID":"bb5464671cf5:drone-db:3306","ServiceName":"mysql","ServiceTags":null,"ServiceAddress":"172.17.0.3","ServicePort":33060},{"Node":"e9cba74266b5","Address":"172.17.0.2","ServiceID":"bb5464671cf5:gogs-db:3306","ServiceName":"mysql","ServiceTags":null,"ServiceAddress":"172.17.0.3","ServicePort":33061}]
- 
+
 2.   **Gogs** <http://gogs-3000.service.consul:3000/> and complete the configuration by submitting:
  
      *   _MySQL_ database type.
