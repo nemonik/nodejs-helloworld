@@ -215,3 +215,4 @@ Then tail the **Gogs** logs via:
 In other terminal or tab secure shell back into the _consul_ docker machine and then tail **Drone**'s log via:
 
     drone logs -f drone
+
