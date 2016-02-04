@@ -192,7 +192,7 @@ Once logged in you'll see something like:
     |_.__/ \___/ \___/ \__|_____\__,_|\___/ \___|_|\_\___|_|
     Boot2Docker version 1.9.1, build master : cef800b - Fri Nov 20 19:33:59 UTC 2015
     Docker version 1.9.1, build a34a1d5
-    docker@consul:~$ 
+    docker@consul:~$
 
 Then list containers via:
 
