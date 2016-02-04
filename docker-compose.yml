@@ -11,7 +11,7 @@ consul:
 registrator:
   container_name: registrator
   restart: on-failure
-  links: 
+  links:
     - consul:consul
   image: gliderlabs/registrator
   command: consul://consul:8500
