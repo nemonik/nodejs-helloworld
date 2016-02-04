@@ -27,7 +27,7 @@ You'll need to create a docker-machine to host **Consul**, **Registrator**, **Go
 Then determine the IP of the machine:
 
     docker-machine ip consul
-    
+
 ### <a name="DNSMASQ_for_dev_dns"></a>DNSMASQ for dev DNS
 
 I'm using **dnsmasq** so I can access the _consul_ docker machine via a name vice an IP. There are a number of ways to do this like adding a _consul_ entry to the `/etc/host` and optionally further configuring `dnsmasq`, but I simply added the following line to to `/usr/local/etc/dnsmasq.conf`:
@@ -51,7 +51,7 @@ Then create a docker-compose.yml file with these contents:
     registrator:
       container_name: registrator
       restart: on-failure
-      links: 
+      links:
         - consul:consul
       image: gliderlabs/registrator
       command: consul://consul:8500
@@ -101,7 +101,7 @@ Then create a docker-compose.yml file with these contents:
         - MYSQL_ALLOW_EMPTY_PASSWORD=false
         - MYSQL_ROOT_PASSWORD=gogs
         - MYSQL_DATABASE=gogs
-            
+    
     drone-data:
       container_name: drone-data
       image: busybox
@@ -121,17 +121,17 @@ Then create a docker-compose.yml file with these contents:
         - MYSQL_DATABASE=drone
 
 Then spin these described containers in the `consul` machine with:
- 
+
     docker-compose up -d
-     
+
 Then point your browser to:
- 
+
 1.  **Consul** <http://consul.service.consul:8500/ui/#/dc1/services> 
     
     **Registrator** registers each container to Consul as they spin up with service names using this pattern:
 
     <base(container-image)>[-<exposed-port> if >1 ports] 
-          
+    
     To query the services **Consul** is aware of in your browser, hit <http://consul.service.consul:8500/v1/catalog/services> and it will return:  
      
         {"consul":[],"consul-server-8300":[],"consul-server-8400":[],"consul-server-8500":[],"consul-server-8600":["udp"],"drone":[],"gogs-22":[],"gogs-3000":[],"mysql":[]}
