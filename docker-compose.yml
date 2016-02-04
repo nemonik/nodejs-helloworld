@@ -1,0 +1,81 @@
+consul:
+  container_name: consul
+  image: gliderlabs/consul-server:latest
+  ports:
+    - "8300:8300"
+    - "8400:8400"
+    - "8500:8500"
+    - "53:8600/udp"
+  command: -bootstrap -client 0.0.0.0
+
+registrator:
+  container_name: registrator
+  restart: on-failure
+  links: 
+    - consul:consul
+  image: gliderlabs/registrator
+  command: consul://consul:8500
+  volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+
+drone:
+  container_name: drone
+  image: drone/drone
+  ports:
+    - "8000:8000"
+  environment:
+    - GIN_MODE=release
+    - SERVER_ADDR=:8000
+    - REMOTE_DRIVER=gogs
+    - REMOTE_CONFIG=http://gogs-3000.service.consul:3000?skip_verify=true
+    - DATABASE_DRIVER=mysql
+    - DATABASE_CONFIG=root:drone@tcp(mysql.service.consul:33060)/drone?parseTime=true
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  volumes_from:
+    - drone-data
+
+drone-data:
+  container_name: drone-data
+  image: busybox
+  net: none
+  command: /bin/sh
+  volumes:
+    - /var/lib/drone
+
+drone-db:
+  container_name: drone-db
+  image: mysql:5.6
+  ports:
+    - "33060:3306"
+  environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=false
+    - MYSQL_ROOT_PASSWORD=drone
+    - MYSQL_DATABASE=drone
+
+gogs:
+  container_name: gogs
+  image: gogs/gogs
+  ports:
+    - "3000:3000"
+    - "22022:22"
+  volumes_from:
+    - gogs-data
+
+gogs-data:
+  container_name: gogs-data
+  image: busybox
+  net: none
+  command: /bin/sh
+  volumes:
+    - /data
+
+gogs-db:
+  container_name: gogs-db
+  image: mysql:5.6
+  ports:
+    - "33061:3306"
+  environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=false
+    - MYSQL_ROOT_PASSWORD=gogs
+    - MYSQL_DATABASE=gogs
