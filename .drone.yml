@@ -10,7 +10,7 @@ deploy:
   # if the branch is master
   rsync:
     user: walsh
-    host: 192.168.99.1
+    host: dockerhost
     port: 22
     source: .
     target: /tmp/rsync/
