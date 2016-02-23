@@ -1,0 +1,12 @@
+[Unit]
+Description=Gogs-db container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a gogs-db
+ExecStop=/usr/bin/docker stop -t 10 gogs-db
+
+[Install]
+WantedBy=local.target

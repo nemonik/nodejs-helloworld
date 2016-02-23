@@ -1,0 +1,12 @@
+[Unit]
+Description=Registrators container
+Requires=consul.service
+After=consul.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a registrator
+ExecStop=/usr/bin/docker stop -t 10 registrator
+
+[Install]
+WantedBy=local.target
