@@ -112,7 +112,7 @@ Then point your browser to:
      *   `gogs` for the password.
      *   `22022` for the SSH port.
      *   `http://gogs-3000.service.consul.dev:3000` for the application URL.
-     *   Under `Advanced`, enable `Offline mode`,  checkoff `Disable Gravatar Service` and uncheck `Enable Captcha`.
+     *   Under `Advanced`, checkoff "Enable Offline mode`, checkoff `Disable Gravatar Service`, and uncheck `Enable Captcha`.
      *   Complete the fields under `Admin Account`, if you want to create accounts through an admin account.
 
      If everything goes well the configuration of *Gogs* will be complete.  Add a new account, add this project, and push into `gogs`.
@@ -215,12 +215,12 @@ Complete the configuration by submitting:
 *   `gogs` for the password.
 *   `22022` for the SSH port.
 *   `http://gogs-3000.service.centos7-docker.dev:3000` for the application URL.
-*   Under `Advanced`, enable `Offline mode`,  checkoff `Disable Gravatar Service` and uncheck `Enable Captcha`.
+*   Under `Advanced`, checkoff "Enable Offline mode`, checkoff `Disable Gravatar Service`, and uncheck `Enable Captcha`.
 *   Complete the fields under `Admin Account`, if you want to create accounts through an admin account.
 
 If everything goes well the configuration of *Gogs* will be complete.  Add a new account, add this project, and push into `gogs`.
 
-### <a name="system-start-containers">Systemd start containers
+### <a name="systemd-start-containers">Systemd start containers
 
 Lets place them all under systemd, so that the automatically start at the boot of the Centos 7 VM.  
 
@@ -235,7 +235,11 @@ When the VM comes up run
 
     docker ps
 
-and you should see the containers have started.  To monitor the container through systems as you would via docker-compose in debug use the following command:
+and you should see the containers have started.  
+
+### <a name="systemd-started-container-monitoring">Systemd started container monitoring
+
+To monitor the container through systems as you would via docker-compose in debug use the following command:
 
     journalctl -u docker-gogs.service -u docker-drone.service -u docker-gogs-db.service -u docker-drone-db.service -u docker-consul.service -u docker-registrator.service -f
 
@@ -254,3 +258,13 @@ Instead of today, you can check both since an hour ago like so:
 You can also still monitor individual containers through docker as you described before:
 
     docker logs -f goes
+
+## <a name="backing-up-containers">Backinng up containers
+
+We're going to have to create an image from the [Dockerfile](./backup/Dockerfile)  in this project's backup folder in order to create the container utilized to back up both **Gogs** and **Drone**.
+
+    cd backup
+    docker build -t nemonik/gogs-drone-backup:1.0.0 .
+
+
+docker run --rm -v /home/docker:/backups -e AWS_ACCESS_KEY_ID=AKIAJOI6F5O3J5QZ2WJA -e AWS_SECRET_ACCESS_KEY=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 -e AWS_DEFAULT_REGION=us-east-1 yep1/s3 sync /backups/gogs-db-backup.sql s3://docker-backups.consul/shit-gogs-db-$(date +"%Y-%m-%d-%H-%M-%S").sql 
