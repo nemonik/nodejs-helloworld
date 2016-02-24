@@ -1,7 +1,7 @@
 [Unit]
 Description=Drone-db container
-Requires=docker.service
-After=docker.service
+Requires=docker-registrator.service        
+After=docker-registrator.service    
 
 [Service]
 Restart=always

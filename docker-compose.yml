@@ -14,7 +14,7 @@ registrator:
   links:
     - consul:centos7-docker
   image: gliderlabs/registrator
-  command: consul://${DOCKER_HOST}:8500
+  command: consul://${HOSTNAME}.dev:8500
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock
 
@@ -27,9 +27,9 @@ drone:
     - GIN_MODE=release
     - SERVER_ADDR=:8000
     - REMOTE_DRIVER=gogs
-    - REMOTE_CONFIG=http://gogs-3000.service.${DOCKER_HOST}:3000?skip_verify=true
+    - REMOTE_CONFIG=http://${HOSTNAME}.dev:3000?skip_verify=true
     - DATABASE_DRIVER=mysql
-    - DATABASE_CONFIG=root:drone@tcp(mysql.service.${DOCKER_HOST}:33060)/drone?parseTime=true
+    - DATABASE_CONFIG=root:drone@tcp(${HOSTNAME}.dev:33060)/drone?parseTime=true
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
   volumes_from:
@@ -37,17 +37,17 @@ drone:
 
 drone-data:
   container_name: drone-data
-  image: busybox
+  image: drone/drone:0.4
   net: none
-  command: /bin/sh
+  command: /bin/true
   volumes:
     - /var/lib/drone
 
 drone-db-data:
   container_name: drone-db-data
-  image: busybox
+  image: mysql
   net: none
-  command: /bin/sh
+  command: /bin/true
   volumes:
     - /var/lib/mysql
 
@@ -74,17 +74,17 @@ gogs:
 
 gogs-data:
   container_name: gogs-data
-  image: busybox
+  image: gogs/gogs
   net: none
-  command: /bin/sh
+  command: /bin/true
   volumes:
     - /data
 
 gogs-db-data:
   container_name: gogs-db-data
-  image: busybox
+  image: mysql
   net: none
-  command: /bin/sh
+  command: /bin/true
   volumes:
     - /var/lib/mysql
 

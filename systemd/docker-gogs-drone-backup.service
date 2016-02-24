@@ -1,0 +1,8 @@
+[Unit]
+Description=Gogs Drone backup service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/docker-gogs-drone-backup.sh

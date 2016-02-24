@@ -84,7 +84,6 @@ to /usr/local/etc/dnsmasq.conf`.
 Use the [./docker-compose.yml](./docker-compose.yml) contained in this project to spin up its described containers on the `consul.dev` machine with:
 
     eval $(docker-machine env consul)
-    export DOCKER_HOST=consul.dev
     docker-compose up -d
     
 To see all the logging from each container drop the `-d` parameter.
@@ -112,7 +111,7 @@ Then point your browser to:
      *   `gogs` for the password.
      *   `22022` for the SSH port.
      *   `http://gogs-3000.service.consul.dev:3000` for the application URL.
-     *   Under `Advanced`, checkoff "Enable Offline mode`, checkoff `Disable Gravatar Service`, and uncheck `Enable Captcha`.
+     *   Under `Advanced`, enable `Offline mode`,  checkoff `Disable Gravatar Service` and uncheck `Enable Captcha`.
      *   Complete the fields under `Admin Account`, if you want to create accounts through an admin account.
 
      If everything goes well the configuration of *Gogs* will be complete.  Add a new account, add this project, and push into `gogs`.
@@ -185,11 +184,13 @@ Mount the ISO as a CDROM, and start up the VM.
 
 Do the minimal install. Create a admin account. Under networking, check `Automatically connect to this network when it is available`, check `All users may connect to this network`, and then select `IPv4 Settings` tab/panel and select `Require IPv4 address for this connection to complete`. The hover says, "When connecting to IPv6 capable networks, allows the connection to complete if IPv4 configuration fails, but IPv6 succeeds".  If you don't do this your networking won't be configured correctly...
 
+Once, up make sure hostname is `centos7-docker`, if not edit `/etc/hostname` to set it.  Also, add `centos7-docker.dev` to `/etc/hosts`.
+
 When the install finishes follow Docker's instructions to install Docker.  Either the steps under `Install with yum` or via `Install with the script`.  I did the later.
 
 After that install few other things as root.
 
-    yum -y install nano python-pip git
+    yum -y install nano python-pip git ntp
     pip install docker-compose
 
 Also, make sure to complete the steps for creating a docker group, and start the docker daemon at boot.
@@ -203,7 +204,6 @@ Then ssh into the VM, and clone this project:
 Use the [./docker-compose.yml](./docker-compose.yml) contained in this project to spin uo its described containers on the `centos7-docker.dev` machine with:
 
     cd nodejs-helloworld
-    export DOCKER_HOST=centos7-docker.dev
     docker-compose up -d
 
 This will cache Docker images, and spin up the containers. Once complete, Gogs should be reachable via [http://gogs-3000.service.centos7-docker.dev:3000/](http://gogs-3000.service.centos7-docker.dev:3000/).
@@ -215,7 +215,7 @@ Complete the configuration by submitting:
 *   `gogs` for the password.
 *   `22022` for the SSH port.
 *   `http://gogs-3000.service.centos7-docker.dev:3000` for the application URL.
-*   Under `Advanced`, checkoff "Enable Offline mode`, checkoff `Disable Gravatar Service`, and uncheck `Enable Captcha`.
+*   Under `Advanced`, enable `Offline mode`,  checkoff `Disable Gravatar Service` and uncheck `Enable Captcha`.
 *   Complete the fields under `Admin Account`, if you want to create accounts through an admin account.
 
 If everything goes well the configuration of *Gogs* will be complete.  Add a new account, add this project, and push into `gogs`.
@@ -229,7 +229,15 @@ Execute the following as root:
     cd .../systemd
     cp docker-*.service /etc/systemd/system/multi-user.target.wants/.
 
-To save typing, reboot the VM.  
+To save typing, reboot the VM or:
+
+    systemctl start docker-consul
+  	systemctl start docker-registrator
+    systemctl start docker-gogs-db
+    systemctl start docker-drone.db
+    systemctl start docker-gogs
+    systemctl start docker-drone
+
 
 When the VM comes up run
 
@@ -241,30 +249,79 @@ and you should see the containers have started.
 
 To monitor the container through systems as you would via docker-compose in debug use the following command:
 
-    journalctl -u docker-gogs.service -u docker-drone.service -u docker-gogs-db.service -u docker-drone-db.service -u docker-consul.service -u docker-registrator.service -f
+    journalctl -u docker-gogs -u docker-drone -u docker-gogs-db -u docker-drone-db -u docker-consul -u docker-registrator -f
 
 To check on how the Gogs container is running today through systemd, enter the following on the cmd-line: 
 
-    journalctl -u docker-gogs.service --since today
+    journalctl -u docker-gogs --since today
 
 To check on how both the Gog and Drones container is running today through systemd, enter the following on the cmd-line: 
 
-    journalctl -u docker-gogs.service docker-drone.service --since today
+    journalctl -u docker-gogs docker-drone --since today
 
 Instead of today, you can check both since an hour ago like so:
 
-    journalctl -u docker-gogs.service docker-drone.service --since "1 hour ago"
+    journalctl -u docker-gog docker-drone --since "1 hour ago"
 
 You can also still monitor individual containers through docker as you described before:
 
-    docker logs -f goes
+    docker logs -f gogs
 
-## <a name="backing-up-containers">Backinng up containers
+## <a name="backing-up-the-containers">Backing up the containers
 
 We're going to have to create an image from the [Dockerfile](./backup/Dockerfile)  in this project's backup folder in order to create the container utilized to back up both **Gogs** and **Drone**.
 
     cd backup
-    docker build -t nemonik/gogs-drone-backup:1.0.0 .
+    docker build -t nemonik/gogs-drone-backup . 
+    
+Once you've create the image you will use it to backup the CI/CD pipeline.
 
+    docker run --rm -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX -e AWS_DEFAULT_REGION=us-east-1 -e DOCKER_DEV_HOST=consul.dev -e S3_BUCKET_NAME=docker-backups.consul --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
+    
+Replace `XXXXXXXXXXXXXX`for your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` respectively.
 
-docker run --rm -v /home/docker:/backups -e AWS_ACCESS_KEY_ID=AKIAJOI6F5O3J5QZ2WJA -e AWS_SECRET_ACCESS_KEY=0IG/5cUBnL/Cp5VOKPQJafJujJxXYuEQ3k3I2vVx -e AWS_DEFAULT_REGION=us-east-1 yep1/s3 sync /backups/gogs-db-backup.sql s3://docker-backups.consul/shit-gogs-db-$(date +"%Y-%m-%d-%H-%M-%S").sql 
+`AWS_DEFAULT_REGION` by default is set to `us-east-1`, so you don't need to set if this is the region you desire.
+ 
+`DOCKER_DEV_HOST` by default is set to `consul.dev`, so if you're using the the CentOS 7 host set to `centos7-docker.dev` instead.
+
+`S3_BUCKET_NAME` by default is set to `docker-backups.consul`.
+
+So minimally, you can create a backup via:
+
+    docker run --rm -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
+
+To debug, you can run via:
+
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup /bin/bash
+
+And then run `./backup.sh` or do whatever you need to do.
+
+## <a name="systems-timer-backup">Auto backing up containers
+
+The following is only relevant to backing the CentOS 7 Docker host.
+ 
+Add the image as described in the prior section.
+
+As root,execute the following:
+
+Install the backup script:
+
+    cd ../systemd/scripts
+    cp docker-gogs-drone--backup.sh  /usr/local/bin/.
+    chmod +x /usr/local/bin/docker-gogs-drone-backup.sh 
+    chmod o-r /usr/local/bin/docker-gogs--drone-backup.sh 
+
+Edit the script entering you AWS credentials.
+
+Install the backup service and timer:
+
+    cd ..
+    cp docker-gogs-drone-backup.* /etc/systemd/system/.
+
+Start the timer:
+
+    systemctl start docker-gogs-drone-backup.timer
+    
+To start at boot:
+
+    systemctl enable docker-gogs-drone-backup.timer
