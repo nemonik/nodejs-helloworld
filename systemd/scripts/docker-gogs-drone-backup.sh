@@ -13,7 +13,8 @@ ntpdate pool.ntp.org
 systemctl stop docker-gogs
 systemctl stop docker-drone
 
-docker run --rm -e AWS_ACCESS_KEY_ID=AKIAJOI6F5O3J5QZ2WJA -e AWS_SECRET_ACCESS_KEY=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 --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
+docker run --rm -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup 
+nemonik/gogs-drone-backup 
 
 # Start the web service front-ends
 systemctl start docker-gogs
