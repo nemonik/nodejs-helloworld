@@ -276,23 +276,21 @@ We're going to have to create an image from the [Dockerfile](./backup/Dockerfile
     
 Once you've create the image you will use it to backup the CI/CD pipeline.
 
-    docker run --rm -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX -e AWS_DEFAULT_REGION=us-east-1 -e DOCKER_DEV_HOST=consul.dev -e S3_BUCKET_NAME=docker-backups.consul --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
+    docker run --rm --net="host" -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX -e AWS_DEFAULT_REGION=us-east-1 --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
     
 Replace `XXXXXXXXXXXXXX`for your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` respectively.
 
 `AWS_DEFAULT_REGION` by default is set to `us-east-1`, so you don't need to set if this is the region you desire.
- 
-`DOCKER_DEV_HOST` by default is set to `consul.dev`, so if you're using the the CentOS 7 host set to `centos7-docker.dev` instead.
 
-`S3_BUCKET_NAME` by default is set to `docker-backups.consul`.
+`S3_BUCKET_NAME` in backup.sh will be set to `docker-backups.`+ the hostname + `dev`, if you want something else change the script an recreate the image.
 
 So minimally, you can create a backup via:
 
-    docker run --rm -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
+    docker run --rm --net="host" -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup 
 
 To debug, you can run via:
 
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup /bin/bash
+    docker run --rm --net="host"  -i -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXX --volumes-from drone-data --volumes-from gogs-data --name gogs-drone-backup nemonik/gogs-drone-backup /bin/bash
 
 And then run `./backup.sh` or do whatever you need to do.
 
@@ -306,8 +304,8 @@ As root,execute the following:
 
 Install the backup script:
 
-    cd ../systemd/scripts
-    cp docker-gogs-drone--backup.sh  /usr/local/bin/.
+    cd ../systemd/timer/scripts
+    cp docker-gogs-drone--backup.sh /usr/local/bin/.
     chmod +x /usr/local/bin/docker-gogs-drone-backup.sh 
     chmod o-r /usr/local/bin/docker-gogs--drone-backup.sh 
 
@@ -321,6 +319,10 @@ Install the backup service and timer:
 Start the timer:
 
     systemctl start docker-gogs-drone-backup.timer
+    
+To check if the time has been added:
+
+    systemctl list-timers
     
 To start at boot:
 

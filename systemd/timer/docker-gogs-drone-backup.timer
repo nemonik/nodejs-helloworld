@@ -3,8 +3,8 @@ Description=Runs the Gogs-Drone-backup every 24 hours
 
 [Timer]
 OnBootSec=10min
-OnUnitActiveSec=24h
+OnUnitActiveSec=24hr
 Unit=docker-gogs-drone-backup.service
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=timers.target
