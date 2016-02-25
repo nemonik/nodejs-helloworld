@@ -9,4 +9,4 @@ ExecStart=/usr/bin/docker start -a registrator
 ExecStop=/usr/bin/docker stop -t 10 registrator
 
 [Install]
-WantedBy=local.target
+WantedBy=multi-user.target

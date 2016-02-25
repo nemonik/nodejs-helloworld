@@ -226,20 +226,28 @@ Lets place them all under systemd, so that the automatically start at the boot o
 
 Execute the following as root:
 
-    cd .../systemd
-    cp docker-*.service /etc/systemd/system/multi-user.target.wants/.
+    cd ../systemd
+    cp docker-*.service /etc/systemd/system/.
 
-To save typing, reboot the VM or:
+To start, run as root:
 
-    systemctl start docker-consul
-  	systemctl start docker-registrator
-    systemctl start docker-gogs-db
-    systemctl start docker-drone.db
-    systemctl start docker-gogs
-    systemctl start docker-drone
+    systemctl start docker-consul.service
+    systemctl start docker-registrator.service
+    systemctl start docker-gogs-db.service
+    systemctl start docker-gogs.service
+    systemctl start docker-drone-db.service
+    systemctl start docker-drone.service
 
+To enable on boot, run as root:
 
-When the VM comes up run
+    systemctl enable docker-consul.service
+    systemctl enable docker-registrator.service
+    systemctl enable docker-gogs-db.service
+    systemctl enable docker-gogs.service
+    systemctl enable docker-drone-db.service
+    systemctl enable docker-drone.service
+
+Then check to see if they've all come up:
 
     docker ps
 
@@ -305,9 +313,9 @@ As root,execute the following:
 Install the backup script:
 
     cd ../systemd/timer/scripts
-    cp docker-gogs-drone--backup.sh /usr/local/bin/.
+    cp docker-gogs-drone-backup.sh /usr/local/bin/.
     chmod +x /usr/local/bin/docker-gogs-drone-backup.sh 
-    chmod o-r /usr/local/bin/docker-gogs--drone-backup.sh 
+    chmod o-r /usr/local/bin/docker-gogs-drone-backup.sh 
 
 Edit the script entering you AWS credentials.
 

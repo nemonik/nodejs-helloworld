@@ -1,7 +1,7 @@
 [Unit]
 Description=Drone-db container
-Requires=docker-registrator.service        
-After=docker-registrator.service    
+Requires=docker-registrator.service 
+After=docker-registrator.service
 
 [Service]
 Restart=always
@@ -9,4 +9,4 @@ ExecStart=/usr/bin/docker start -a drone-db
 ExecStop=/usr/bin/docker stop -t 10 drone-db
 
 [Install]
-WantedBy=local.target
+WantedBy=multi-user.target

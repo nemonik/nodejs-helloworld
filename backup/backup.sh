@@ -17,9 +17,11 @@ fi
 
 cd /tmp
 
-aws s3 --region $AWS_DEFAULT_REGION cp gogs.sql s3://$S3_BUCKET_NAME/$TIMESTAMP/gogs.sql
+tar czf gogs.sql.tar.gz gogs.sql 
+aws s3 --region $AWS_DEFAULT_REGION cp gogs.sql s3://$S3_BUCKET_NAME/$TIMESTAMP/gogs.sql.tar.gz 
 
-aws s3 --region $AWS_DEFAULT_REGION cp drone.sql s3://$S3_BUCKET_NAME/$TIMESTAMP/drone.sql
+tar czf drone.sql.tar.gz drone.sql
+aws s3 --region $AWS_DEFAULT_REGION cp drone.sql s3://$S3_BUCKET_NAME/$TIMESTAMP/drone.sql.tar.gz
 
 tar czf gogs-data.tar.gz /data
 

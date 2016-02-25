@@ -1,6 +1,6 @@
 [Unit]
 Description=Drone container
-Requires=docker-drone-db.service 
+Requires=docker-drone-db.service
 After=docker-drone-db.service
 
 [Service]
@@ -9,4 +9,4 @@ ExecStart=/usr/bin/docker start -a drone
 ExecStop=/usr/bin/docker stop -t 10 drone
 
 [Install]
-WantedBy=local.target
+WantedBy=multi-user.target

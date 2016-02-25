@@ -9,4 +9,4 @@ ExecStart=/usr/bin/docker start -a consul
 ExecStop=/usr/bin/docker stop -t 10 consul
 
 [Install]
-WantedBy=local.target
+WantedBy=multi-user.target
