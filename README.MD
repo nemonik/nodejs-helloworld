@@ -335,3 +335,9 @@ To check if the time has been added:
 To start at boot:
 
     systemctl enable docker-gogs-drone-backup.timer
+    
+To view the logging for the unit executed by the timer:
+
+    journalctl -u docker-gogs-drone-backup
+
+
