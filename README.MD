@@ -190,7 +190,7 @@ When the install finishes follow Docker's instructions to install Docker.  Eithe
 
 After that install few other things as root.
 
-    yum -y install nano git ntp bind-utils
+    yum -y install nano git ntp bind-utils git
 
 Follow these instructions to install Docker and docker-compose:
 
