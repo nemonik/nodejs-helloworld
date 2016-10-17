@@ -195,11 +195,10 @@ After that install few other things as root.
 Follow these instructions to install Docker and docker-compose:
 
 https://docs.docker.com/engine/installation/linux/centos/
+
 https://docs.docker.com/compose/install/
 
-
-
-Also, make sure to complete the steps for creating a docker group, and start the docker daemon at boot.
+Also, make sure to complete the steps for creating a docker group, and start the docker daemon at boot, etc.
 
 ### <a name="docker-compose-centos7-docker">Spinning up the containers
 
