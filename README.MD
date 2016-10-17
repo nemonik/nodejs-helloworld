@@ -186,11 +186,11 @@ Do the minimal install. Create a admin account. Under networking, check `Automat
 
 Once, up make sure hostname is `centos7-docker`, if not edit `/etc/hostname` to set it.  Also, add `centos7-docker.dev` to `/etc/hosts`.
 
-When the install finishes follow Docker's instructions to install Docker.  Either the steps under `Install with yum` or via `Install with the script`.  I did the later.
+After that install few other things as root:
 
-After that install few other things as root.
-
-    yum -y install nano git ntp bind-utils git
+   yum update
+   yum -y install nano git ntp bind-utils
+   sudo reboot
 
 Follow these instructions to install Docker and docker-compose:
 
