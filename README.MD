@@ -190,8 +190,14 @@ When the install finishes follow Docker's instructions to install Docker.  Eithe
 
 After that install few other things as root.
 
-    yum -y install nano python-pip git ntp
-    pip install docker-compose
+    yum -y install nano git ntp bind-utils
+
+Follow these instructions to install Docker and docker-compose:
+
+https://docs.docker.com/engine/installation/linux/centos/
+https://docs.docker.com/compose/install/
+
+
 
 Also, make sure to complete the steps for creating a docker group, and start the docker daemon at boot.
 
